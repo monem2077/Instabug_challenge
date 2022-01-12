@@ -1,0 +1,85 @@
+version: "3.9"
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: instabug_challenge
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - ./data:/var/lib/mysql
+
+  redis:
+    image: redis:alpine
+    container_name: instabug_challenge_redis
+    ports:
+      - "6379:6379"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=${DB_HOST}
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    depends_on:
+      - db
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && rails db:migrate && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/instabug_challenge
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - elasticsearch
+    links:
+      - db
+    environment:
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: instabug_challenge
+      DB_HOST: db
+
+  sidekiq:
+    build: .
+    restart: always
+    command: bundle exec sidekiq -C config/schedule.yml
+    volumes:
+      - .:/instabug_challenge
+    environment:
+      DATABASE_URL: mysql2://db/instabug_challenge
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: instabug_challenge
+      JOB_WORKER_URL: redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+    restart: always
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.3.2
+    container_name: instabug_challenge_kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch

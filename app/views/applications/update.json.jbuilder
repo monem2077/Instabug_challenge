@@ -1,0 +1,1 @@
+json.(@application, :uuid, :name)

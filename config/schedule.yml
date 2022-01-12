@@ -1,0 +1,9 @@
+update_application_chats_number:
+  cron: "0 * * * *"
+  class: "UpdateChatsCountJob"
+  queue: default
+
+update_chat_messages_number:
+  cron: "0 * * * *"
+  class: "UpdateMessagesCountJob"
+  queue: default
