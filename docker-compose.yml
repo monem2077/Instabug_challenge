@@ -21,6 +21,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: instabug_challenge
+      MYSQL_ROOT_HOST: 127.21.0.8
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     restart: always
@@ -46,6 +47,7 @@ services:
       DB_NAME: instabug_challenge
       DB_PASSWORD: password
       DB_HOST: localhost
+      MYSQL_ROOT_HOST: 127.21.0.8
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
       DATABASE_URL: 'mysql2://db'
 
@@ -66,6 +68,7 @@ services:
       DB_NAME: instabug_challenge
       DB_PASSWORD: password
       DB_HOST: localhost
+      MYSQL_ROOT_HOST: 127.21.0.8
       RAILS_ENV: "development"
       REDIS_URL: "redis://redis:6379/12"
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
