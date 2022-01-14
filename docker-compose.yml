@@ -45,8 +45,9 @@ services:
       DB_USER: user
       DB_NAME: instabug_challenge
       DB_PASSWORD: password
-      DB_HOST: db
+      DB_HOST: localhost
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
+      DATABASE_URL: 'mysql2://db'
 
   web:
     build: .
@@ -64,10 +65,11 @@ services:
       DB_USER: user
       DB_NAME: instabug_challenge
       DB_PASSWORD: password
-      DB_HOST: db
+      DB_HOST: localhost
       RAILS_ENV: "development"
       REDIS_URL: "redis://redis:6379/12"
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
+      DATABASE_URL: 'mysql2://db'
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
