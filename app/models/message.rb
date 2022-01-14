@@ -15,7 +15,3 @@ class Message < ApplicationRecord
     @number_of_messages
   end
 end
-
-Message.__elasticsearch__.client = Elasticsearch::Client.new host: 'http://elasticsearch:9200'
-Message.__elasticsearch__.create_index!
-Message.import force: true
