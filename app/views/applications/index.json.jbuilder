@@ -1,6 +1,6 @@
 json.applications do |applicationsElement|
   applicationsElement.array!(@applications) do |application|
-    json.extract! application, :uuid, :name
+    json.extract! application, :uuid, :name, :chats_count
   end
 end
 json.current_page @applications.current_page
